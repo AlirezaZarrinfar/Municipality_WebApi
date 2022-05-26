@@ -15,8 +15,8 @@ namespace Municipality_WebApi.Application.Services.CustomerService
         public bool deleteCustomers(long id);
         public string showCustomersById(long id);
         public bool changeExpireDate(DateTime newdate, int customerId);
-        public string showCustomers();
-        public string ShowMinAndMaxPayment(long customerId);
+        public JArray ShowMinAndMaxPayment(long customerId);
+        public JArray showCustomers();
 
 
     }

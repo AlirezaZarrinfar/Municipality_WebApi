@@ -16,14 +16,16 @@ namespace Municipality_WebApi.Application.Services.BillsService
         {
             this.customerService = customerService;
         }
-        public string showAllBills()
+        public JArray showAllBills()
         {
             string command = "select * from Bill ";
             SqlCommand sqlcommand = new SqlCommand(command, Connection.Instance.connection());
             SqlDataAdapter dataAdapter = new SqlDataAdapter(sqlcommand);
             DataTable dt = new DataTable();
             dataAdapter.Fill(dt);
-            return JsonConvert.SerializeObject(dt);
+            string bills = JsonConvert.SerializeObject(dt);
+            JArray jsonbills = JArray.Parse(bills);
+            return jsonbills;
         }
 
         public string showBillById(long id)
@@ -55,7 +57,7 @@ namespace Municipality_WebApi.Application.Services.BillsService
             return jsonBill + "\n" + jsonCustomer;
         }
 
-        public string SuccessAndFailedCount(int customerId)
+        public JArray SuccessAndFailedCount(int customerId)
         {
             string command = "SP_TFpivot";
             SqlCommand sqlCommand = new SqlCommand(command, Connection.Instance.connection());
@@ -64,10 +66,11 @@ namespace Municipality_WebApi.Application.Services.BillsService
             SqlDataAdapter da = new SqlDataAdapter(sqlCommand);
             DataTable dt = new DataTable();
             da.Fill(dt);
-            return JsonConvert.SerializeObject(dt);
+            string data = JsonConvert.SerializeObject(dt);
+            return JArray.Parse(data);
         }
         //Sp_TotalPrice
-        public string getTotalCount()
+        public JArray getTotalCount()
         {
             string command = "Sp_TotalPrice";
             SqlCommand sqlCommand = new SqlCommand(command, Connection.Instance.connection());
@@ -75,7 +78,8 @@ namespace Municipality_WebApi.Application.Services.BillsService
             SqlDataAdapter da = new SqlDataAdapter(sqlCommand);
             DataTable dt = new DataTable();
             da.Fill(dt);
-            return JsonConvert.SerializeObject(dt);
+            string data = JsonConvert.SerializeObject(dt);
+            return JArray.Parse(data);
         }
     }
 }

@@ -33,16 +33,20 @@ namespace Municipality_WebApi.Controllers
         {
             if (database.StringGet("bills").IsNull)
             {
-                database.StringSet("bills", Unitofwork.billsService.showAllBills());
+                database.StringSet("bills", Unitofwork.billsService.showAllBills().ToString());
                 database.KeyExpire("bills", TimeSpan.FromSeconds(45));
             }
-            return Ok(database.StringGet("bills"));
+            return Ok(database.StringGet("bills").ToString());
         }
         [HttpGet("SuccessAndFailedCount")]
         public IActionResult SuccessAndFailedCount(int customerId)
         {
-            var res = Unitofwork.billsService.SuccessAndFailedCount(customerId);
-            return Ok(res);
+            if (database.StringGet("sfcount" + customerId).IsNull)
+            {
+                database.StringSet("sfcount" + customerId, Unitofwork.billsService.SuccessAndFailedCount(customerId).ToString());
+                database.KeyExpire("sfcount" + customerId, TimeSpan.FromSeconds(45));
+            }
+            return Ok(database.StringGet("sfcount" + customerId).ToString());
         }
         //Sp_TotalPrice
         [HttpGet("GetTotalPrice")]

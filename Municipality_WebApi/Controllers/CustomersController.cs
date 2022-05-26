@@ -61,10 +61,10 @@ namespace Municipality_WebApi.Controllers
         {
             if (database.StringGet("customers").IsNull)
             {
-                database.StringSet("customers", Unitofwork.customerService.showCustomers());
+                database.StringSet("customers", Unitofwork.customerService.showCustomers().ToString());
                 database.KeyExpire("customers", TimeSpan.FromSeconds(45));
             }
-            return Ok(database.StringGet("customers").ToString());
+            return Ok(database.StringGet("customers").ToString()) ;
         }
         [HttpPut ("ChangeExpireDate")]
         public IActionResult ChangeExpiredate(int customerId , DateTime newdate)
@@ -77,7 +77,7 @@ namespace Municipality_WebApi.Controllers
         {
             if (database.StringGet("maxminprice" + customerid.ToString()).IsNull)
             {
-                database.StringSet("maxminprice" + customerid.ToString(), Unitofwork.customerService.ShowMinAndMaxPayment(customerid));
+                database.StringSet("maxminprice" + customerid.ToString(), Unitofwork.customerService.ShowMinAndMaxPayment(customerid).ToString());
                 database.KeyExpire("maxminprice" + customerid.ToString(), TimeSpan.FromSeconds(45));
             }
             return Ok(database.StringGet("maxminprice" + customerid.ToString()).ToString());

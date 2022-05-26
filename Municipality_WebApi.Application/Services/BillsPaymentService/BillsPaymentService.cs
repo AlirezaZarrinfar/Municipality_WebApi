@@ -27,7 +27,7 @@ namespace Municipality_WebApi.Application.Services.BillsPaymentService
                 var jsonBill = billsService.showBillById(billId);
                 var bill = JsonConvert.DeserializeObject<ShowBillsModel>(jsonBill.Substring(1, jsonBill.Length - 2));
                 var jsonCustomer = customerService.showCustomersById(bill.CustomerId);
-                var customer = JsonConvert.DeserializeObject<ShowCustomersModel>(jsonCustomer.Substring(1, jsonCustomer.Length - 2));
+                var customer = JsonConvert.DeserializeObject<ShowCustomersModel>(jsonCustomer.Substring(1,jsonCustomer.Length-2));
                 string command = "insert into BillsPayment ([BillId] , [IsPaid] , [Price] , [Date]) values (@billid , @ispaid , @price , @date)";
                 SqlCommand sqlcommand = new SqlCommand();
                 sqlcommand.CommandText = command;
@@ -48,7 +48,7 @@ namespace Municipality_WebApi.Application.Services.BillsPaymentService
                     sqlcommand.Parameters.AddWithValue("@price", bill.Price);
                     sqlcommand.Parameters.AddWithValue("@date", DateTime.Now);
                     sqlcommand.ExecuteNonQuery();
-                    return false;
+                    return true;
                 }
             }
             catch

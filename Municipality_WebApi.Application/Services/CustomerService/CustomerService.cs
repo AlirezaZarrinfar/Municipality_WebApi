@@ -51,7 +51,7 @@ namespace Municipality_WebApi.Application.Services.CustomerService
             return true;
         }
 
-        public string showCustomers()
+        public JArray showCustomers()
         {
             string command = "select * from Customer";
             SqlCommand sqlcommand = new SqlCommand(command,Connection.Instance.connection());
@@ -59,7 +59,8 @@ namespace Municipality_WebApi.Application.Services.CustomerService
             DataTable dt = new DataTable();
             dataAdapter.Fill(dt);
             string customers = JsonConvert.SerializeObject(dt);
-            return customers;
+            JArray jsonCustomer = JArray.Parse(customers);
+            return jsonCustomer;
         }
 
         public string showCustomersById(long id)
@@ -72,6 +73,7 @@ namespace Municipality_WebApi.Application.Services.CustomerService
             DataTable dt = new DataTable();
             dataAdapter.Fill(dt);
             return JsonConvert.SerializeObject(dt);
+
         }
 
         public bool updateCustomers(UpdateCustomersModel model)
@@ -117,7 +119,7 @@ namespace Municipality_WebApi.Application.Services.CustomerService
                 return false;
             }
         }
-        public string ShowMinAndMaxPayment(long customerId)
+        public JArray ShowMinAndMaxPayment(long customerId)
         {
             //showminmaxpayment
             {
@@ -128,7 +130,7 @@ namespace Municipality_WebApi.Application.Services.CustomerService
                 SqlDataAdapter da = new SqlDataAdapter(sqlCommand);
                 DataTable dt = new DataTable();
                 da.Fill(dt);
-                return JsonConvert.SerializeObject(dt);
+                return JArray.Parse(JsonConvert.SerializeObject(dt));
             }
         }
     }
