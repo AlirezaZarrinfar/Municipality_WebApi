@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Municipality_WebApi.Application.Services.BillsService;
 using Municipality_WebApi.Application.Services.CustomerService;
+using Municipality_WebApi.Application.UnitOfWork;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,40 +15,40 @@ namespace Municipality_WebApi.Controllers
     [ApiController]
     public class BillsController : ControllerBase
     {
-        IBillsService _billsService;
-        public BillsController(IBillsService billsService)
+        IUnitofwork Unitofwork;
+        IDatabase database;
+        public BillsController(IUnitofwork Unitofwork,IDatabase database)
         {
-            _billsService = billsService;
-        }
-        [HttpPost("CreateRandomBills")]
-        public IActionResult addBills()
-        {
-            var res = _billsService.addBills();
-            return Ok(res);
+            this.database = database;
+            this.Unitofwork = Unitofwork;
         }
         [HttpGet("GetBillAndCustomer")]
         public IActionResult getBillandCustomer(long billId)
         {
-            var res = _billsService.showBillandCustomer(billId);
+            var res = Unitofwork.billsService.showBillandCustomer(billId);
             return Ok(res);
         }
         [HttpGet("GetAllBills")]
         public IActionResult getAllBills()
         {
-            var res = _billsService.showAllBills();
-            return Ok(res);
+            if (database.StringGet("bills").IsNull)
+            {
+                database.StringSet("bills", Unitofwork.billsService.showAllBills());
+                database.KeyExpire("bills", TimeSpan.FromSeconds(45));
+            }
+            return Ok(database.StringGet("bills"));
         }
-        [HttpGet("TFCount")]
-        public IActionResult TFCount(int customerId)
+        [HttpGet("SuccessAndFailedCount")]
+        public IActionResult SuccessAndFailedCount(int customerId)
         {
-            var res = _billsService.TFCount(customerId);
+            var res = Unitofwork.billsService.SuccessAndFailedCount(customerId);
             return Ok(res);
         }
         //Sp_TotalPrice
         [HttpGet("GetTotalPrice")]
         public IActionResult GetTotalPrice()
         {
-            var res = _billsService.getTotalCount();
+            var res = Unitofwork.billsService.getTotalCount();
             return Ok(res);
         }
     }

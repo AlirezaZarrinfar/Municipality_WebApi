@@ -1,6 +1,8 @@
 ﻿using Municipality_WebApi.Common.Models.Customers;
 using Municipality_WebApi.Persistance.Connection;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -56,7 +58,8 @@ namespace Municipality_WebApi.Application.Services.CustomerService
             SqlDataAdapter dataAdapter = new SqlDataAdapter(sqlcommand);
             DataTable dt = new DataTable();
             dataAdapter.Fill(dt);
-            return JsonConvert.SerializeObject(dt);
+            string customers = JsonConvert.SerializeObject(dt);
+            return customers;
         }
 
         public string showCustomersById(long id)
@@ -97,21 +100,35 @@ namespace Municipality_WebApi.Application.Services.CustomerService
                 return false;
             }
         }
-        public bool changeExpireDate(int year , int yearAdd)
+        public bool changeExpireDate(DateTime newdate , int customerId)
         {
             try
             {
                 string command = "SP_changeExpireDate";
                 SqlCommand sqlCommand = new SqlCommand(command, Connection.Instance.connection());
                 sqlCommand.CommandType = CommandType.StoredProcedure;
-                sqlCommand.Parameters.AddWithValue("@year", year);
-                sqlCommand.Parameters.AddWithValue("@yearadd", yearAdd);
+                sqlCommand.Parameters.AddWithValue("@id", customerId);
+                sqlCommand.Parameters.AddWithValue("@newdate", newdate);
                 sqlCommand.ExecuteNonQuery();
                 return true;
             }
             catch
             {
                 return false;
+            }
+        }
+        public string ShowMinAndMaxPayment(long customerId)
+        {
+            //showminmaxpayment
+            {
+                string command = "showminmaxpayment";
+                SqlCommand sqlCommand = new SqlCommand(command, Connection.Instance.connection());
+                sqlCommand.CommandType = CommandType.StoredProcedure;
+                sqlCommand.Parameters.AddWithValue("@cid", customerId);
+                SqlDataAdapter da = new SqlDataAdapter(sqlCommand);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                return JsonConvert.SerializeObject(dt);
             }
         }
     }

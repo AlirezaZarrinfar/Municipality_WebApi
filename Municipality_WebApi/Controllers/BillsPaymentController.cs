@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Municipality_WebApi.Application.Services.BillsPaymentService;
+using Municipality_WebApi.Application.UnitOfWork;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,27 +13,28 @@ namespace Municipality_WebApi.Controllers
     [ApiController]
     public class BillsPaymentController : ControllerBase
     {
-        IBillsPaymentService billsPaymentService;
-        public BillsPaymentController(IBillsPaymentService billsPaymentService)
+        IUnitofwork Unitofwork;
+        public BillsPaymentController(IUnitofwork Unitofwork)
         {
-            this.billsPaymentService = billsPaymentService;
+            this.Unitofwork = Unitofwork;
+            
         }
         [HttpPost("PayBillById/{billId}")]
         public IActionResult PayBillById(long billId)
         {
-            var res = billsPaymentService.payBillWithId(billId);
+            var res = Unitofwork.billsPaymentService.payBillWithId(billId);
             return Ok(res);
         }
         [HttpPost("PayMultiBillsWithId/{billsId}")]
         public IActionResult PayMultiBillsWithId(string billsId)
         {
-            var res = billsPaymentService.payMultiBillsWithId(billsId);
+            var res = Unitofwork.billsPaymentService.payMultiBillsWithId(billsId);
             return Ok(res);
         }
         [HttpPost("payBillsWithCustomerId/{customerId}")]
         public IActionResult payBillsWithCustomerId(long customerId)
         {
-            var res = billsPaymentService.payBillsWithCustomerId(customerId);
+            var res = Unitofwork.billsPaymentService.payBillsWithCustomerId(customerId);
             return Ok(res);
         }
     }

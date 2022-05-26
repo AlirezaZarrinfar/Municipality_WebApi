@@ -11,7 +11,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Municipality_WebApi.Applica
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Municipality_WebApi.Common", "Municipality_WebApi.Common\Municipality_WebApi.Common.csproj", "{76208F1B-4991-4806-BBFD-D2AB64873215}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Municipality_Test", "Municipality_Test\Municipality_Test.csproj", "{1113E6CD-DF8D-41BD-BF44-446D198A94FB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Municipality_Test", "Municipality_Test\Municipality_Test.csproj", "{1113E6CD-DF8D-41BD-BF44-446D198A94FB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreateBills_WebApi", "CreateRandomBills_WebApi\CreateBills_WebApi.csproj", "{DF1DD4E5-6D6A-43BA-9635-56BC729D23D6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreateBills_WebApi.Application", "CreateRandomBills_WebApi.Application\CreateBills_WebApi.Application.csproj", "{C2A84F06-ED49-4907-855F-4F803F09F55C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreateBills_WebApi.Persistance", "CreateBills_WebApi.Persistance\CreateBills_WebApi.Persistance.csproj", "{16537D51-E52E-4588-84C9-17B692D1B791}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +45,18 @@ Global
 		{1113E6CD-DF8D-41BD-BF44-446D198A94FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1113E6CD-DF8D-41BD-BF44-446D198A94FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1113E6CD-DF8D-41BD-BF44-446D198A94FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF1DD4E5-6D6A-43BA-9635-56BC729D23D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF1DD4E5-6D6A-43BA-9635-56BC729D23D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF1DD4E5-6D6A-43BA-9635-56BC729D23D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF1DD4E5-6D6A-43BA-9635-56BC729D23D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2A84F06-ED49-4907-855F-4F803F09F55C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2A84F06-ED49-4907-855F-4F803F09F55C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2A84F06-ED49-4907-855F-4F803F09F55C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2A84F06-ED49-4907-855F-4F803F09F55C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16537D51-E52E-4588-84C9-17B692D1B791}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16537D51-E52E-4588-84C9-17B692D1B791}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16537D51-E52E-4588-84C9-17B692D1B791}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16537D51-E52E-4588-84C9-17B692D1B791}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

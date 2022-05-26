@@ -32,12 +32,24 @@ namespace Municipality_WebApi.Application.Services.BillsPaymentService
                 SqlCommand sqlcommand = new SqlCommand();
                 sqlcommand.CommandText = command;
                 sqlcommand.Connection = Connection.Instance.connection();
-                sqlcommand.Parameters.AddWithValue("@billid", billId);
-                sqlcommand.Parameters.AddWithValue("@ispaid", !(customer.ExpireDate < DateTime.Now));
-                sqlcommand.Parameters.AddWithValue("@price" , bill.Price);
-                sqlcommand.Parameters.AddWithValue("@date", DateTime.Now);
-                sqlcommand.ExecuteNonQuery();
-                return true;
+                if ((customer.ExpireDate < DateTime.Now))
+                {
+                    sqlcommand.Parameters.AddWithValue("@billid", billId);
+                    sqlcommand.Parameters.AddWithValue("@ispaid", false);
+                    sqlcommand.Parameters.AddWithValue("@price", bill.Price);
+                    sqlcommand.Parameters.AddWithValue("@date", DateTime.Now);
+                    sqlcommand.ExecuteNonQuery();
+                    return false;
+                }
+                else
+                {
+                    sqlcommand.Parameters.AddWithValue("@billid", billId);
+                    sqlcommand.Parameters.AddWithValue("@ispaid", true);
+                    sqlcommand.Parameters.AddWithValue("@price", bill.Price);
+                    sqlcommand.Parameters.AddWithValue("@date", DateTime.Now);
+                    sqlcommand.ExecuteNonQuery();
+                    return false;
+                }
             }
             catch
             {

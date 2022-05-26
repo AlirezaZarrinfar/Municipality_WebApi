@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Distributed;
 using Municipality_WebApi.Application.Services.CustomerService;
+using Municipality_WebApi.Application.UnitOfWork;
 using Municipality_WebApi.Common.Models.Customers;
 using Newtonsoft.Json;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,10 +17,13 @@ namespace Municipality_WebApi.Controllers
     [ApiController]
     public class CustomersController : ControllerBase
     {
-        ICustomerService _customerService;
-        public CustomersController(ICustomerService customerService)
+        IDatabase database;
+      //  IDistributedCache distributedCache;
+        IUnitofwork Unitofwork;
+        public CustomersController(IUnitofwork Unitofwork,  IDatabase database)
         {
-            _customerService = customerService;
+            this.database = database;
+            this.Unitofwork = Unitofwork;
         }
         [HttpPost("AddCustomers")]
         public IActionResult AddCustomer(AddCustomersModel model)
@@ -26,17 +32,18 @@ namespace Municipality_WebApi.Controllers
             {
                 return BadRequest();
             }
-            var res = _customerService.addCustomers(model);
+            var res = Unitofwork.customerService.addCustomers(model);
             return Ok(res);
         }
         [HttpPut("UpdateCustomers")]
         public IActionResult UpdateCustomer(UpdateCustomersModel model)
         {
+            
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
-            var res = _customerService.updateCustomers(model);
+            var res = Unitofwork.customerService.updateCustomers(model);
             return Ok(res);
         }
         [HttpDelete("DeleteCustomers")]
@@ -46,20 +53,34 @@ namespace Municipality_WebApi.Controllers
             {
                 return BadRequest();
             }
-            var res = _customerService.deleteCustomers(id);
+            var res = Unitofwork.customerService.deleteCustomers(id);
             return Ok(res);
         }
         [HttpGet("GetCustomers")]
         public IActionResult GetCustomer()
         {
-            var res = _customerService.showCustomers();
-            return Ok(res);
+            if (database.StringGet("customers").IsNull)
+            {
+                database.StringSet("customers", Unitofwork.customerService.showCustomers());
+                database.KeyExpire("customers", TimeSpan.FromSeconds(45));
+            }
+            return Ok(database.StringGet("customers").ToString());
         }
         [HttpPut ("ChangeExpireDate")]
-        public IActionResult ChangeExpiredate(int year , int yearadd)
+        public IActionResult ChangeExpiredate(int customerId , DateTime newdate)
         {
-            var res = _customerService.changeExpireDate(year, yearadd);
+            var res = Unitofwork.customerService.changeExpireDate(newdate, customerId);
             return Ok(res);
+        }
+        [HttpGet("MaxandminPrice")]
+        public IActionResult MaxandminPrice(long customerid)
+        {
+            if (database.StringGet("maxminprice" + customerid.ToString()).IsNull)
+            {
+                database.StringSet("maxminprice" + customerid.ToString(), Unitofwork.customerService.ShowMinAndMaxPayment(customerid));
+                database.KeyExpire("maxminprice" + customerid.ToString(), TimeSpan.FromSeconds(45));
+            }
+            return Ok(database.StringGet("maxminprice" + customerid.ToString()).ToString());
         }
     }
 }

@@ -10,9 +10,11 @@ using Microsoft.OpenApi.Models;
 using Municipality_WebApi.Application.Services.BillsPaymentService;
 using Municipality_WebApi.Application.Services.BillsService;
 using Municipality_WebApi.Application.Services.CustomerService;
+using Municipality_WebApi.Application.UnitOfWork;
 using Municipality_WebApi.Middleware;
 //using Municipality_WebApi.Middleware;
 using Municipality_WebApi.Persistance.Connection;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,9 +34,14 @@ namespace Municipality_WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<IBillsPaymentService, BillsPaymentService>();
-            services.AddScoped<IBillsService, BillsService>();
-            services.AddScoped<ICustomerService, CustomerService>();
+            //services.AddStackExchangeRedisCache(options =>
+            //{
+            //    options.Configuration = "localhost:6379";
+            //    options.InstanceName = "";
+            //});
+            var redis = ConnectionMultiplexer.Connect("localhost:6379");
+            services.AddScoped(p => redis.GetDatabase());
+            services.AddScoped<IUnitofwork, Unitofwork>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
